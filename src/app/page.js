@@ -23,7 +23,7 @@ export default function Chat() {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    socket = io("http://localhost:3500");
+    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
     const q = query(collection(db, "messages"), orderBy("timestamp"));
 
@@ -91,11 +91,11 @@ export default function Chat() {
           </div>
         </div>
       )}
-      <div className="w-full max-w-2xl bg-white rounded shadow">
+      <div className="w-full max-w-2xl h-full sm:h-max bg-white rounded shadow">
         <div className="p-4 border-b">
           <h1 className="text-lg font-bold">Chat</h1>
         </div>
-        <div className="h-96 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+        <div className="h-4/5 sm:h-96 overflow-y-auto p-4 space-y-2 custom-scrollbar">
           {messages.map((msg, index) => (
             <div
               key={index}
@@ -119,7 +119,7 @@ export default function Chat() {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        <div className="flex p-4 border-t">
+        <div className="flex p-2 pt-4 sm:p-4 border-t">
           <input
             ref={messageInputRef}
             type="text"
