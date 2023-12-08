@@ -22,6 +22,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const messageInputRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const scrollableMessagesRef = useRef(null);
 
   useEffect(() => {
     socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
@@ -49,8 +50,18 @@ export default function Chat() {
     };
   }, []);
 
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollableMessagesRef.current) {
+      const scrollableElement = scrollableMessagesRef.current;
+      scrollableElement.scrollTo({
+        top: scrollableElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
 
   const sendMessage = async () => {
@@ -102,7 +113,10 @@ export default function Chat() {
         <div className="p-4 border-b">
           <h1 className="text-lg font-bold">Chat</h1>
         </div>
-        <div className="h-4/5 sm:h-96 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+        <div
+          ref={scrollableMessagesRef}
+          className="h-4/5 sm:h-96 overflow-y-auto p-4 space-y-2 custom-scrollbar"
+        >
           {messages.map((msg, index) => (
             <div
               key={index}
