@@ -7,6 +7,7 @@ import {
   orderBy,
   onSnapshot,
   doc,
+  getDocs,
 } from "firebase/firestore";
 import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
@@ -25,12 +26,18 @@ export default function Chat() {
   useEffect(() => {
     socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
+    // Define the query
     const q = query(collection(db, "messages"), orderBy("timestamp"));
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map((doc) => doc.data());
-      setMessages(messages);
-    });
+    // Fetch the data once
+    getDocs(q)
+      .then((querySnapshot) => {
+        const messages = querySnapshot.docs.map((doc) => doc.data());
+        setMessages(messages);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages from Firestore: ", error);
+      });
 
     socket.on("receiveMessage", (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
@@ -38,7 +45,7 @@ export default function Chat() {
 
     return () => {
       socket.disconnect();
-      unsubscribe();
+      // unsubscribe();
     };
   }, []);
 
