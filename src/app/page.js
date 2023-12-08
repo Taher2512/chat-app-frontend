@@ -80,7 +80,7 @@ export default function Chat() {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 p-4">
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-5 rounded">
+          <div className="bg-white p-5 rounded w-4/5 sm:w-auto">
             <h2 className="text-lg font-bold mb-4">Enter Your Name</h2>
             <input
               type="text"
